@@ -12,6 +12,8 @@ const router = require('express').Router()
 
   // Public dat get routes
 
+  // Get all plugins
+
   router.get('/', async (req, res) => {
       await Connection.connectToMongo()
       const database = Connection.db;
@@ -21,10 +23,12 @@ const router = require('express').Router()
       res.status(200).json({ plugins: getAll })
   })
 
+  // Get plugin by id
+
   router.get('/:pluginID', async (req, res) => {
     await Connection.connectToMongo()
     const database = Connection.db;
-     const plugins = database.collection('plugins');;
+    const plugins = database.collection('plugins');;
     const pluginId = req.params.pluginID
     let plugin = await plugins.findOne({ id : pluginId }, projection)
     if (!plugin || plugin.length == 0) 
@@ -34,15 +38,20 @@ const router = require('express').Router()
   
   // Publishing
 
-  router.post('/publish', async (req, res) => {
+  // Insert or update plugin
+
+  router.post('/publish', async (req, res, done) => {
     await Connection.connectToMongo()
     const database = Connection.db;
     const plugins = database.collection('plugins');
     const users = database.collection('users');
     let plugin = req.body;
-    let API_KEY = req.get('Authorization');
-    let user = await users.findOne({API_KEY})
-    if (!user || user.length == 0) res.sendStatus(401)
+    let api_key = req.get('Authorization');
+    let user = await users.findOne({api_key})
+    if (!user || user.length == 0) { 
+      res.sendStatus(401); 
+      return done()
+    }
     let upsert = await plugins.replaceOne(
       { id: plugin.id },
       plugin,
