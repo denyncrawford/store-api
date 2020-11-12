@@ -1,10 +1,13 @@
 const express = require('express')
 const createRateLimit = require('express-rate-limit')
+const session = require("express-session");
+const passport = require('passport')
 const bodyParser = require('body-parser')
 const morgan = require('morgan')
 const cors = require('cors')
 const enableWs = require('express-ws')
-const app = express()
+const app = express();
+require('dotenv').config()
 
 const appLimit = createRateLimit({
   windowMs: 50000,
@@ -14,15 +17,27 @@ const appLimit = createRateLimit({
   },
 })
 
+passport.serializeUser(function(user, done) {
+  done(null, user);
+});
+
+passport.deserializeUser(function(obj, done) {
+  done(null, obj);
+});
+
 
 enableWs(app)
 app.use(cors())
 app.use(appLimit)
 app.use(morgan('dev'))
+app.use(session({ secret: process.env.SESSION_SECRET }));
 app.use(bodyParser.json())
-app.use(bodyParser.urlencoded({ extended: true }))
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(passport.initialize());
+app.use(passport.session());
 
-app.use(require('./routes'))
+app.use('/api', require('./routes/api'))
+app.use('/auth', require('./routes/auth'))
 
 app.listen(process.env.PORT || 2035, () => console.log(`App listening on port ${process.env.PORT || 2035}`))
 
