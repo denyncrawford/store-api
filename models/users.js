@@ -7,7 +7,6 @@ exports.formatProfile = (profile) => {
   return {
     name: profile.displayName,
     email: data.email,
-    githubId: data.id,
     username: profile.username,
     api_key: uuidv1(),
     id: profile.id,

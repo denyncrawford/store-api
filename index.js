@@ -44,6 +44,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(passport.initialize());
 app.use(passport.session());
 
+app.use(require('./routes/api'));
 app.use('/api', require('./routes/api'))
 app.use('/auth', require('./routes/auth'))
 
