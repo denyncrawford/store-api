@@ -1,4 +1,5 @@
 const router = require('express').Router()
+const { truncate } = require('lodash');
 const passport = require('passport')
 const GitHubStrategy = require('passport-github2').Strategy;
 const HeaderAPIKeyStrategy = require('passport-headerapikey').HeaderAPIKeyStrategy
@@ -30,13 +31,13 @@ passport.use(new GitHubStrategy({
 
 passport.use(new HeaderAPIKeyStrategy(
   { header: 'Authorization', prefix: 'Api-Key ' },
-  false,
+  true,
   async (apikey, done) => {
     await Connection.connectToMongo()
     const database = Connection.db;
     const users = database.collection('users')
     let user = await users.findOne({api_key: apikey});
-    if (!user || !user.length) { return done(null, false); }
+    if (!user || user.length <= 0) { return done(null, false); }
     return done(null, user);
   }
 ));
@@ -52,5 +53,19 @@ router.get('/github/callback',
     // Successful authentication, redirect home.
     res.redirect('/');
   });
+
+// Request status
+
+const statusMessages = {
+  401: {
+    code: 401,
+    status: "unauthrized",
+    message: "Unauthorized request, please provide a valid API KEY to access this private endpoint."
+  }
+}
+
+router.get('/unauthorized', (req, res) => {
+  res.status(401).json(statusMessages[401])
+})
 
 module.exports = router;

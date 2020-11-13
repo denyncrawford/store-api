@@ -11,7 +11,7 @@ const passport = require('passport');
     _id: 0
   }
 
-  // Public dat get routes
+  // Public data get routes
 
   // Get all plugins
 
@@ -20,7 +20,6 @@ const passport = require('passport');
       const database = Connection.db;
       const plugins = database.collection('plugins');
       let getAll = await plugins.find({}).project(projection).toArray()
-      console.log(getAll);
       res.status(200).json({ plugins: getAll })
   })
 
@@ -41,18 +40,18 @@ const passport = require('passport');
 
   // Insert or update plugin
 
-  router.post('/publish', passport.authenticate('headerapikey', { session: false, failureRedirect: '/api/unauthorized' }),
+  router.post('/publish', passport.authenticate('headerapikey', { session: false, failureRedirect: '/auth/unauthorized' }),
   async (req, res) => {
     await Connection.connectToMongo()
     const database = Connection.db;
     const plugins = database.collection('plugins');
-    let plugin = req.body;
-    let upsert = await plugins.replaceOne(
-      { id: plugin.id },
-      plugin,
+    let plugin_payload = req.body;
+    let plugin = await plugins.replaceOne(
+      { id: plugin_payload.id },
+      plugin_payload,
       { upsert: true});
-    upsert = upsert.ops
-    res.status(200).json({ upsert })
+    plugin = plugin.ops
+    res.status(200).json({ plugin })
   });
 
 module.exports = router
