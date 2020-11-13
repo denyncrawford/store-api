@@ -9,7 +9,7 @@ const { formatProfile } = require('../../models/users')
 passport.use(new GitHubStrategy({
   clientID: GITHUB_CLIENT_ID,
   clientSecret: GITHUB_CLIENT_SECRET,
-  callbackURL: "http://localhost:2035/auth/github/callback"
+  callbackURL: `${process.env.HOST}/auth/github/callback`
 }, async (accessToken, refreshToken, profile, done) => {
   await Connection.connectToMongo()
   const database = Connection.db;
