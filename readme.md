@@ -78,7 +78,7 @@ $ npm run dev
 ```json
 {
   "Content-type":"application/json",
-  "Authorization": <YOUR-API-KEY>
+  "Authorization": "Api-Key <YOUR-API-KEY>"
 }
 ```
 

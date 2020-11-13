@@ -1,10 +1,13 @@
 const router = require('express').Router()
 const passport = require('passport')
 const GitHubStrategy = require('passport-github2').Strategy;
+const HeaderAPIKeyStrategy = require('passport-headerapikey').Strategy
 const GITHUB_CLIENT_ID = process.env.GITHUB_CLIENT_ID;
 const GITHUB_CLIENT_SECRET = process.env.GITHUB_CLIENT_SECRET;
 const { Connection } = require('../../models/database')
 const { formatProfile } = require('../../models/users')
+
+// Github STRATEGY
 
 passport.use(new GitHubStrategy({
   clientID: GITHUB_CLIENT_ID,
@@ -21,6 +24,21 @@ passport.use(new GitHubStrategy({
   let err = !Boolean(user)
   return done(err, insertion);
 }
+));
+
+// APIKEY STRATEGY 
+
+passport.use(new HeaderAPIKeyStrategy(
+  { header: 'Authorization', prefix: 'Api-Key ' },
+  false,
+  async (apikey, done) => {
+    await Connection.connectToMongo()
+    const database = Connection.db;
+    const users = database.collection('users')
+    let user = await users.findOne({api_key: apikey});
+    if (!user || !user.length) { return done(null, false); }
+    return done(null, user);
+  }
 ));
 
 // Endpoints
