@@ -60,17 +60,17 @@ $ npm run dev
 2. Write a POST request on `https://graviton-api.herokuapp.com/api/plugins/publish` with the followind body:
 ```json
 {
-  name: <PLUGIN-NAME>,
-  id: <ID-FOR-PLUGIN>,
-  author: <YOUR-NAME>,
-  description: <DESCRIPTION>,
-  repository: <LINK-TO-PLUGIN-REPO>,
-  releases: [ 
-    version: <PLUGIN-VERSION>
+  "name": "<PLUGIN-NAME>",
+  "id": "<ID-FOR-PLUGIN>",
+  "author": "<YOUR-NAME>",
+  "description": "<DESCRIPTION>",
+  "repository": "<LINK-TO-PLUGIN-REPO>",
+  "releases": [ 
+    {"version": "<PLUGIN-VERSION>"}
   ],
-   minTarget: <MINIMUM-GRAVITON-VERSION>,
-   target: <GRAVITON-VERSION>,
-   url: <LINK-TO-PLUGIN-RELEASE-ZIP>
+   "minTarget": "<MINIMUM-GRAVITON-VERSION>",
+   "target": "<GRAVITON-VERSION>",
+   "url": "<LINK-TO-PLUGIN-RELEASE-ZIP>"
 }
 ```
 3. Add the following headers to the request:
