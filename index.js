@@ -7,7 +7,7 @@ const morgan = require('morgan')
 const cors = require('cors')
 const enableWs = require('express-ws')
 const app = express();
-require('dotenv').config()
+if (process.env.NODE_ENV !== 'production') require('dotenv').config()
 const MongoStore = require('connect-mongo')(session);
 const { Connection } = require('./models/database')
 
