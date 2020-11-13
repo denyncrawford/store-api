@@ -1,5 +1,5 @@
 const router = require('express').Router()
-const { authenticate } = require('passport');
+const passport = require('passport');
 
   const { Connection } = require('../../models/database')
 
@@ -41,7 +41,7 @@ const { authenticate } = require('passport');
 
   // Insert or update plugin
 
-  router.post('/publish', authenticate('headerapikey', { session: false, failureRedirect: '/api/unauthorized' }),
+  router.post('/publish', passport.authenticate('headerapikey', { session: false, failureRedirect: '/api/unauthorized' }),
   async (req, res) => {
     await Connection.connectToMongo()
     const database = Connection.db;

@@ -1,7 +1,7 @@
 const router = require('express').Router()
 const passport = require('passport')
 const GitHubStrategy = require('passport-github2').Strategy;
-const HeaderAPIKeyStrategy = require('passport-headerapikey').Strategy
+const HeaderAPIKeyStrategy = require('passport-headerapikey').HeaderAPIKeyStrategy
 const GITHUB_CLIENT_ID = process.env.GITHUB_CLIENT_ID;
 const GITHUB_CLIENT_SECRET = process.env.GITHUB_CLIENT_SECRET;
 const { Connection } = require('../../models/database')
