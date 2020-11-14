@@ -32,6 +32,8 @@ To use some private endpoints of the API service as well as the plugin publishin
 
 > This will redirect you to your profile on the Graviton site, then you will see your APIKEY. 
 
+The API KEY allows user identification and ensures the data transport. It also isolates API transactions using a permission model to avoid modifying other users' data.
+
 ## 📖 Alternative usage:
 
 > To support the older versions of the Graviton ecosystem, we still keep the old endpoints, we do not recommend their use as their support will end eventually.
