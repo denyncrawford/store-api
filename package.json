@@ -36,6 +36,9 @@
 		"uuid": "^8.3.1",
 		"ws": "^7.3.1"
 	},
+	"engines": {
+    "node": "14.x"
+  },
 	"devDependencies": {
 		"adm-zip": "^0.4.16",
 		"axios": "^0.20.0",
