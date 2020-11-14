@@ -3,8 +3,10 @@ const { apiVersion } = require('../../models/version')
 
 router.get('/', (req, res) => {
   if (req.user) {
-    let apiKey = req.user.api_key
-    res.status(200).json({apiKey, apiVersion})
+    let { api_key, username, name } = req.user
+    let message = `Hi! ${name}. Welcome to the Graviton's Store API 2.0.`
+    let version = apiVersion();
+    res.status(200).json({username , message, api_key, ...version})
   } else {
     res.status(200).json(apiVersion())
   }
