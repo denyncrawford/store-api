@@ -3,6 +3,7 @@
 The Graviton's Store API (GSA) is a service as a RESTful API that provides methods for obtaining, modifying and publishing plugins in the graviton store.
 
 Hosted in https://graviton-api.herokuapp.com/
+You can tast this version at https://graviton-api-v2.herokuapp.com/
 
 ## 📖 Usage (^2.0.0): 
 
@@ -146,3 +147,4 @@ $ npm run start
 ## Contributors 🤠
 LucasAlt [Github](https://github.com/LucasCtrl)
 David Niederweis [Github](https://github.com/DJN1)
+Denyn Crawford [Github](https://github.com/denyncrawford)
