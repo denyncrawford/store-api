@@ -29,6 +29,7 @@ To use some private endpoints of the API service as well as the plugin publishin
 | --------------- | ------------- | ------ |
 | GET | /auth/github/ | Login with the user Github Account |
 | GET | /auth/github/callback | Serialize the user's session data |
+| GET | /auth/logout | Deserialize and estroy the session. |
 
 > This will redirect you to your profile on the Graviton site, then you will see your APIKEY. 
 
