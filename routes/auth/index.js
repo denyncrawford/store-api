@@ -53,6 +53,11 @@ router.get('/github/callback',
     res.redirect('/');
   });
 
+  router.get('/logout', function(req, res){
+    req.logout();
+    res.redirect('/');
+  });
+
 // Request status
 
 const statusMessages = {
