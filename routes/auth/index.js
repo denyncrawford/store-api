@@ -1,5 +1,4 @@
 const router = require('express').Router()
-const { truncate } = require('lodash');
 const passport = require('passport')
 const GitHubStrategy = require('passport-github2').Strategy;
 const HeaderAPIKeyStrategy = require('passport-headerapikey').HeaderAPIKeyStrategy
@@ -37,7 +36,7 @@ passport.use(new HeaderAPIKeyStrategy(
     const database = Connection.db;
     const users = database.collection('users')
     let user = await users.findOne({api_key: apikey});
-    if (!user || user.length <= 0) { return done(null, false); }
+    if (!Boolean(user)) { return done(null, false); }
     return done(null, user);
   }
 ));

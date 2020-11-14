@@ -3,6 +3,7 @@ const createRateLimit = require('express-rate-limit')
 const session = require("express-session");
 const passport = require('passport')
 const bodyParser = require('body-parser')
+const cookieParser = require('cookie-parser');
 const morgan = require('morgan')
 const cors = require('cors')
 const enableWs = require('express-ws')
@@ -32,15 +33,20 @@ enableWs(app)
 app.use(cors())
 app.use(appLimit)
 app.use(morgan('dev'))
-app.use(session({ 
-    secret: process.env.SESSION_SECRET,
-    store: new MongoStore({ 
-      url:  `mongodb+srv://crawford:${process.env.DATABASE_PASSWORD}@cluster0.ptsmt.mongodb.net/graviton?retryWrites=true&w=majority`,
-      mongoOptions: { useNewUrlParser: true, useUnifiedTopology: true }
-    }) 
-  }));
+app.use(cookieParser())
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(session({ 
+    secret: process.env.SESSION_SECRET,
+    resave: true,
+    cookie: { maxAge: 8*60*60*1000 },  // 8 hours
+    saveUninitialized: true,
+    store: new MongoStore({ 
+      url:  `mongodb+srv://crawford:${process.env.DATABASE_PASSWORD}@cluster0.ptsmt.mongodb.net/graviton?retryWrites=true&w=majority`,
+      mongoOptions: { useNewUrlParser: true, useUnifiedTopology: true },
+      ttl: 24 * 60 * 60
+    }) 
+  }));
 app.use(passport.initialize());
 app.use(passport.session());
 

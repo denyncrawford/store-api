@@ -1,5 +1,7 @@
 # 🎡 Graviton Store's API
 
+The Graviton's Store API (GSA) is a service as a RESTful API that provides methods for obtaining, modifying and publishing plugins in the graviton store.
+
 Hosted in https://graviton-api.herokuapp.com/
 
 ## 📖 Usage (^2.0.0): 
@@ -14,7 +16,8 @@ Hosted in https://graviton-api.herokuapp.com/
 | GET | /api/plugins/:pluginID | Get plugin info by it's id | Public / Limited |
 | DELETE | /api/plugins/:pluginID/ | Remove a plugin by it's id | Private |
 | POST | /api/plugins/publish/ | Register or Update a plugin | Private |
-| GET | /api/plugins/:pluginID/install | Direct plugin download | Public |
+| GET | /api/plugins/:pluginID/download | Direct plugin download (last release) | Public |
+| GET | /api/plugins/:pluginID/download/:release | Direct plugin download by release | Public |
 
 ### Auth Web Endpoints
 
@@ -25,7 +28,7 @@ To use some private endpoints of the API service as well as the plugin publishin
 | Method | Endpoint | Description |
 | --------------- | ------------- | ------ |
 | GET | /auth/github/ | Login with the user Github Account |
-| GET | /auth/github/callback | Serialize the user's data |
+| GET | /auth/github/callback | Serialize the user's session data |
 
 > This will redirect you to your profile on the Graviton site, then you will see your APIKEY. 
 
@@ -46,18 +49,28 @@ To use some private endpoints of the API service as well as the plugin publishin
 $ npm install
 ```
 
-2. Start the project in dev mode. This command will start a development server.
+2. Create your `.env` file on root.
+
+```sh
+DATABASE_PASSWORD=<DATABASE-PASSWORD>
+GITHUB_CLIENT_ID=<OAUTH-GITHUB-CLIENT-ID>
+GITHUB_CLIENT_SECRET=<OAUTH-GITHUB-CLIENT-SECRET>
+SESSION_SECRET=<SESSION-SECRET>
+HOST=http://localhost:2035 OR <DOMAIN-NAME>
+```
+
+3. Start the project in dev mode. This command will start a development server.
 ```sh
 $ npm run dev
 ```
-> Please note that we do not provide any DB Instances / Clusters for public development, you need to get your own MongoDB datastore and credentials. You can set all your privates placing them on the .env file at the root of the project.
+> Please note that we do not provide any DB Instances / Clusters for public development, you need to get your own MongoDB datastore and credentials (***You must set all your private stuff placing them on the .env file at the root of the project***).
 
 ## 🔌 Publishing Plugins
 
 ## REST
 
 1. Get your [API KEY](http://graviton.netlify.app).
-2. Write a POST request on `https://graviton-api.herokuapp.com/api/plugins/publish` with the followind body:
+2. Write a POST request on `https://graviton-api.herokuapp.com/api/plugins/publish` with the following body:
 ```json
 {
   "name": "<PLUGIN-NAME>",
@@ -73,7 +86,7 @@ $ npm run dev
    "url": "<LINK-TO-PLUGIN-RELEASE-ZIP>"
 }
 ```
-3. Add the following headers to the request:
+3. Add the required headers to the request:
 
 ```json
 {
@@ -92,6 +105,8 @@ $ npm run dev
   2. Once the release is published, copy the download-url, and release version of the release and paste into the `url`, `version` fields above respectively.
 * `minTarget` will be the minimum version of Graviton(`X.X.X`)
 * `target` will be a more specific target, you can for example use `2` to target Graviton v2.X.X, or `2.1` for v2.1.X
+
+
 
 ## 🎎 Contributing
 #### Before commiting on git

@@ -1,8 +1,13 @@
 const router = require('express').Router()
-const version = require('../../models/version')
+const { apiVersion } = require('../../models/version')
 
-router.get('/', function (req, res) {
-  res.status(200).json(version.apiVersion())
+router.get('/', (req, res) => {
+  if (req.user) {
+    let apiKey = req.user.api_key
+    res.status(200).json({apiKey, apiVersion})
+  } else {
+    res.status(200).json(apiVersion())
+  }
 })
 
 router.use('/plugins', require('./plugins'))
