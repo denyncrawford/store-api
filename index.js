@@ -44,7 +44,8 @@ app.use(session({
     store: new MongoStore({ 
       url:  `mongodb+srv://crawford:${process.env.DATABASE_PASSWORD}@cluster0.ptsmt.mongodb.net/graviton?retryWrites=true&w=majority`,
       mongoOptions: { useNewUrlParser: true, useUnifiedTopology: true },
-      ttl: 24 * 60 * 60
+      ttl: 24 * 60 * 60,
+      autoReconnect: true
     }) 
   }));
 app.use(passport.initialize());

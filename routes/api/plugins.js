@@ -58,7 +58,7 @@
     const pluginId = req.params.pluginID
     let plugin = await plugins.findOne({ id : pluginId }, {projection: projections.detailed})
     if (!plugin || plugin.length == 0) 
-      res.sendStatus(404) 
+      res.status(404).json(errorMessages[404])
     res.status(200).json({ plugin })
   })
   

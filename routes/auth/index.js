@@ -7,6 +7,14 @@ const GITHUB_CLIENT_SECRET = process.env.GITHUB_CLIENT_SECRET;
 const { Connection } = require('../../models/database')
 const { formatProfile } = require('../../models/users')
 
+// Connector
+
+  const connect = async () => {
+    await Connection.connectToMongo()
+    const database = Connection.db;
+    return  users = database.collection('users');
+  }
+
 // Github STRATEGY
 
 passport.use(new GitHubStrategy({
@@ -14,9 +22,7 @@ passport.use(new GitHubStrategy({
   clientSecret: GITHUB_CLIENT_SECRET,
   callbackURL: `${process.env.HOST}/auth/github/callback`
 }, async (accessToken, refreshToken, profile, done) => {
-  await Connection.connectToMongo()
-  const database = Connection.db;
-  const users = database.collection('users')
+  const users = await connect();
   let user = await users.findOne({id: profile.id});
   if (Boolean(user)) return done(null, user);
   let insertion = formatProfile(profile);
@@ -32,9 +38,7 @@ passport.use(new HeaderAPIKeyStrategy(
   { header: 'Authorization', prefix: 'Api-Key ' },
   true,
   async (apikey, done) => {
-    await Connection.connectToMongo()
-    const database = Connection.db;
-    const users = database.collection('users')
+    const users = await connect();
     let user = await users.findOne({api_key: apikey});
     if (!Boolean(user)) { return done(null, false); }
     return done(null, user);
