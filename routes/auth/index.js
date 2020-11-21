@@ -5,7 +5,7 @@ const HeaderAPIKeyStrategy = require('passport-headerapikey').HeaderAPIKeyStrate
 const GITHUB_CLIENT_ID = process.env.GITHUB_CLIENT_ID;
 const GITHUB_CLIENT_SECRET = process.env.GITHUB_CLIENT_SECRET;
 const { Connection } = require('../../models/database')
-const { formatProfile } = require('../../models/users')
+const { formatProfile, isAdmin } = require('../../models/users')
 
 // Connector
 
@@ -26,6 +26,7 @@ passport.use(new GitHubStrategy({
   let user = await users.findOne({id: profile.id});
   if (Boolean(user)) return done(null, user);
   let insertion = formatProfile(profile);
+  insertion.admin = await isAdmin(profile.username);
   user = await users.insertOne(insertion);
   let err = !Boolean(user)
   return done(err, insertion);

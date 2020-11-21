@@ -95,7 +95,8 @@
     const plugins = await connect();
     const pluginId = req.params.pluginID;
     const user = req.user;
-    let plugin = await plugins.findOneAndDelete({$and:[{id:pluginId},{owner_id: user._id}]});
+    let query = user.admin ? {id:pluginId} : {$and:[{id:pluginId},{owner_id: user._id}]};
+    let plugin = await plugins.findOneAndDelete(query);
     plugin = plugin.value;
     let error = errorMessages[404];
     error.message += " Make sure that you are the owner of this plugin."
