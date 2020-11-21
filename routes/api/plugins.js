@@ -1,6 +1,6 @@
   const router = require('express').Router()
   const passport = require('passport');
-  const { getLastVersion, getRelase } = require('../../models/plugins.js')
+  const { getLastVersion, getRelase, validatePlugin } = require('../../models/plugins.js')
 
   const { Connection } = require('../../models/database')
 
@@ -30,6 +30,11 @@
       code: 404,
       message: "Sorry, we cant't find this plugin.",
       status: "not found"
+    },
+    422: {
+      code: 422,
+      message: "Sorry, wrong plugin manifest.",
+      status: "unprocessable entity"
     }
   }
 
@@ -67,10 +72,15 @@
   // Insert or update plugin
 
   router.post('/publish', passport.authenticate('headerapikey', { session: false, failureRedirect: '/auth/unauthorized' }),
-  async (req, res) => {
-    const plugins = await connect();
+  async (req, res, done) => {
     const user = req.user;
     let payload = req.body;
+    let isValid = await validatePlugin(payload)
+    if (!isValid) {
+      res.status(422).json(errorMessages[422])
+      return done()
+    }
+    const plugins = await connect();
     payload.owner_id = user._id;
     payload.version = getLastVersion(payload.releases);
     let plugin_check = await plugins.findOne({id: payload.id});
