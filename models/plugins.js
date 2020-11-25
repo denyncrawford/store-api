@@ -1,5 +1,7 @@
 let yup = require('yup')
 
+// Get the plugin's last version.
+
 exports.getLastVersion = (releases) => {
   const currentVersion = releases
     .filter(({ version }) => !version.endsWith('.pre') && !version.includes('rc'))
@@ -9,6 +11,8 @@ exports.getLastVersion = (releases) => {
   return currentVersion.version
 }
 
+// Get the pointed release
+
 exports.getRelase = (releases, release) => {
   let rt = releases.filter((r) => {
     return r.version == release
@@ -17,9 +21,11 @@ exports.getRelase = (releases, release) => {
   return rt[0]
 }
 
+// Validating plugin insertion.
+
 let schema = yup.object().shape({
   name: yup.string().required(),
-  id: yup.string().required(),
+  id: yup.string().trim().strict(true).required(),
   author: yup.string().required(),
   description: yup.string().required(),
   repository: yup.string().url().required(),
